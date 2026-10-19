@@ -1,4 +1,5 @@
-﻿using GolBet.Entities.Enums;
+﻿// GolBet.Web/Controllers/MatchesController.cs
+using GolBet.Entities.Enums;
 using GolBet.Repositories.Data;
 using GolBet.Services.DTOs;
 using GolBet.Services.Interfaces;
@@ -21,10 +22,12 @@ public class MatchesController : Controller
 
     // GET /Matches            -> all matches
     // GET /Matches?status=Scheduled -> filtered board
-    public async Task<IActionResult> Index(MatchStatus? status)
+    // GET /Matches?search=nacional&status=Scheduled -> search + filter
+    public async Task<IActionResult> Index(MatchStatus? status, string? search)
     {
         ViewBag.CurrentStatus = status;
-        var board = await _matchService.GetBoardAsync(status);
+        ViewBag.CurrentSearch = string.IsNullOrWhiteSpace(search) ? null : search.Trim();
+        var board = await _matchService.GetBoardAsync(status, search);
         return View(board);
     }
 
